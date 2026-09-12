@@ -23,12 +23,12 @@ class GCloudAutomation {
     this.logDir = config.logDir;
 
      // Ensure directories exist
-    if (!fs.existsSync(this.profileDir)) {
-      fs.mkdirSync(this.profileDir, { recursive: true });
-    }
-    if (!fs.existsSync(this.logDir)) {
-      fs.mkdirSync(this.logDir, { recursive: true });
-    }
+    // if (!fs.existsSync(this.profileDir)) {
+    //   fs.mkdirSync(this.profileDir, { recursive: true });
+    // }
+    // if (!fs.existsSync(this.logDir)) {
+    //   fs.mkdirSync(this.logDir, { recursive: true });
+    // }
 
   }
 
