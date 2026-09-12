@@ -69,7 +69,7 @@ export default function Home() {
           <a href="#features">Features</a>
           <a href="#solutions">Solutions</a>
           <a href="#pricing">Pricing</a>
-          <button className="btn-secondary">Sign In</button>
+          <a href="/first-login" className="btn-secondary">Sign In</a>
           <button className="btn-primary">Get Started</button>
         </nav>
       </header>
