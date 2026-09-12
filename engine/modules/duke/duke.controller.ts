@@ -19,6 +19,7 @@ async initiate(req:Request) {
     * debug: boolean // optional
     * }
     */
+   try {
    const form = await req.json();
    const emails = form.emails.split(",").map((email:string) => email.trim()).filter((email:string) => email.length > 0);
    const chromium_profile = form.chromium_profile.replace(' ', '-').toLowerCase() || 'duke_profile';
@@ -66,8 +67,13 @@ async initiate(req:Request) {
 
   } catch(cbError:any) {
       console.error('\n Process failed:', cbError.message);
-      return fail({});
+      return fail({message: `Duke automation failed: ${cbError.message}`});
   }
+
+} catch (error:any) {
+   console.error('\n Error initiating Duke automation:', error.message);
+   return fail({message: `Error initiating Duke automation: ${error.message}`});
+}
   
   
      
