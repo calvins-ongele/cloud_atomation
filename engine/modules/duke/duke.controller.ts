@@ -40,7 +40,7 @@ async initiate(req:Request) {
       projectId: form.projectId,
       emailsToAdd: emails,
       profileDir,
-      logDir: path.join(profileDir, 'logs'),
+      logDir: path.join(__dirname, 'logs'),
       timeout: Number(form.timeout ?? 30000),
       debug:debug,
    }
