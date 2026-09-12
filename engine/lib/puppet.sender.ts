@@ -22,10 +22,14 @@ class GCloudAutomation {
     this.sessionFile = path.join(this.profileDir, "session.json");
     this.logDir = config.logDir;
 
-    // ensure log directory exists
-    if (this.logDir && !fs.existsSync(this.logDir)) {
+     // Ensure directories exist
+    if (!fs.existsSync(this.profileDir)) {
+      fs.mkdirSync(this.profileDir, { recursive: true });
+    }
+    if (!fs.existsSync(this.logDir)) {
       fs.mkdirSync(this.logDir, { recursive: true });
     }
+
   }
 
   async createBrowser(headless = true) {
