@@ -29,9 +29,9 @@ async initiate(req:Request) {
    const endpoint = form.endpoint ?? "http://localhost:3000/duke-feedback";
 
    if (!form.projectId || !emails.length) {
-      return fail({
-         message: "Missing required fields: projectId and emails are required.",
-      });
+      return fail(new Error(
+         "Missing required fields: projectId and emails are required.",
+      ));
    }
 
    const debug = form.debug === "true" || form.debug === true || form.debug === "1" || form.debug === 1 || form.debug === "yes" || form.debug === "on" || form.debug === "enabled" || form.debug === "enable" || form.debug === "active" || form.debug === "activated" || form.debug === "true" || form.debug === "t" || form.debug === "y" ;
@@ -67,12 +67,12 @@ async initiate(req:Request) {
 
   } catch(cbError:any) {
       console.error('\n Process failed:', cbError.message);
-      return fail({message: `Duke automation failed: ${cbError.message}`});
+      return fail(new Error( `Duke automation failed: ${cbError.message}`));
   }
 
 } catch (error:any) {
    console.error('\n Error initiating Duke automation:', error.message);
-   return fail({message: `Error initiating Duke automation: ${error.message}`});
+   return fail(new Error(`Error initiating Duke automation: ${error.message}`));
 }
   
   
