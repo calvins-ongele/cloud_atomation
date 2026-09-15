@@ -2,7 +2,6 @@ import * as puppeteer from "puppeteer";
 import fs from "fs";
 import path from "path";
 import { ConfigType } from "./ConfigType"; 
-import { put } from '@vercel/blob';
 
 // ==================== HELPER FUNCTIONS ====================
 const delay = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -24,24 +23,19 @@ class GCloudAutomation {
     this.logDir = config.logDir;
 
      // Ensure directories exist
-    // if (!fs.existsSync(this.profileDir)) {
-    //   fs.mkdirSync(this.profileDir, { recursive: true });
-    // }
-    // if (!fs.existsSync(this.logDir)) {
-    //   fs.mkdirSync(this.logDir, { recursive: true });
-    // }
-
-    
-
- 
-
+    if (!fs.existsSync(this.profileDir)) {
+      fs.mkdirSync(this.profileDir, { recursive: true });
+    }
+    if (!fs.existsSync(this.logDir)) {
+      fs.mkdirSync(this.logDir, { recursive: true });
+    }
 
   }
 
   async createBrowser(headless = true) {
-    // if (!fs.existsSync(this.profileDir)) {
-    //   fs.mkdirSync(this.profileDir, { recursive: true });
-    // }
+    if (!fs.existsSync(this.profileDir)) {
+      fs.mkdirSync(this.profileDir, { recursive: true });
+    }
 
     if (this.browser) {
       await this.browser.close();
@@ -216,39 +210,22 @@ class GCloudAutomation {
   console.log(" Login successful! Saving session...");
 
   const cookies = await page.cookies();
-  // fs.writeFileSync(
-  //   path.join(this.profileDir, "cookies.json"),
-  //   JSON.stringify(cookies, null, 2)
-  // );
-  await put(
-      path.join(this.profileDir, "cookies.json"),
-      JSON.stringify(cookies, null, 2),
-      {access: "private", contentType: "application/json",  }
-    );
+  fs.writeFileSync(
+    path.join(this.profileDir, "cookies.json"),
+    JSON.stringify(cookies, null, 2)
+  );
 
-  // fs.writeFileSync(
-  //   this.sessionFile,
-  //   JSON.stringify(
-  //     {
-  //       lastLogin: new Date().toISOString(),
-  //       sessionValid: true,
-  //     },
-  //     null,
-  //     2
-  //   )
-  // );
-  await put(
-      this.sessionFile,
-      JSON.stringify(
+  fs.writeFileSync(
+    this.sessionFile,
+    JSON.stringify(
       {
         lastLogin: new Date().toISOString(),
         sessionValid: true,
       },
       null,
       2
-    ),
-      {access: "private", contentType: "application/json",  }
-    );
+    )
+  );
 
   // Small settle delay before closing
   await delay(1500);
@@ -577,16 +554,11 @@ class GCloudAutomation {
     }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    // fs.writeFileSync(
-    //   `${this.logDir}/results-${timestamp}.json`,
-    //   JSON.stringify(results, null, 2),
-    // );
-    await put(
+    fs.writeFileSync(
       `logs/results-${timestamp}.json`,
       JSON.stringify(results, null, 2),
-      {access: "private", contentType: "application/json",  }
     );
-    console.log(`\n Results saved to ${this.logDir}/results-${timestamp}.json`);
+    console.log(`\n Results saved to logs/results-${timestamp}.json`);
 
     return results;
   }
