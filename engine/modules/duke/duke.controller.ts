@@ -23,7 +23,7 @@ async initiate(req:Request) {
    const form = await req.json();
    const emails = form.emails.split(",").map((email:string) => email.trim()).filter((email:string) => email.length > 0);
    const chromium_profile = form.chromium_profile.replace(' ', '-').toLowerCase() || 'duke_profile';
-   const profileDir = path.join(__dirname, chromium_profile);//submit via form
+   const profileDir = path.join(process.cwd(), 'engine', 'modules', 'duke', chromium_profile);
    //console.log(`\n Using chromium profile directory: ${profileDir}`);return;
    // send tail end feedback via form
    const endpoint = form.endpoint ?? "http://localhost:3000/duke-feedback";
