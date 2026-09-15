@@ -1,7 +1,7 @@
 import { requireAuth } from "@/engine/core/http/auth-guard"; 
 import { ok, created, fail, blob } from "@/engine/core/http/responses";  
 import { ConfigType } from "@/engine/lib/ConfigType";
-import GCloudAutomation from "@/engine/modules/duke/puppet.sender";
+import CloudAutomation from "@/engine/lib/puppet.sender";
 import path from "path"; 
 
 export const DukeController = {
@@ -23,7 +23,7 @@ async initiate(req:Request) {
    const form = await req.json();
    const emails = form.emails.split(",").map((email:string) => email.trim()).filter((email:string) => email.length > 0);
    const chromium_profile = form.chromium_profile.replace(' ', '-').toLowerCase() || 'duke_profile';
-   const profileDir = path.join(process.cwd(), chromium_profile);//submit via form
+   const profileDir = path.join(__dirname, chromium_profile);//submit via form
    //console.log(`\n Using chromium profile directory: ${profileDir}`);return;
    // send tail end feedback via form
    const endpoint = form.endpoint ?? "http://localhost:3000/duke-feedback";
@@ -45,7 +45,7 @@ async initiate(req:Request) {
       debug:debug,
    }
    
-  const automation: GCloudAutomation = new GCloudAutomation(config);
+  const automation: CloudAutomation = new CloudAutomation(config);
 
   try {
       const result = await automation.run();
@@ -72,7 +72,7 @@ async initiate(req:Request) {
 
 } catch (error:any) {
    console.error('\n Error initiating Duke automation:', error.message);
-   return fail(new Error(`Error initiating Duke automation: ${error.message}`));
+   return fail(new Error(`Error initiating your automation: ${error.message}`));
 }
   
   
