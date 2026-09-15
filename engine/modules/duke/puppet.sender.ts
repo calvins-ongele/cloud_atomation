@@ -1,7 +1,7 @@
 import * as puppeteer from "puppeteer";
 import fs from "fs";
 import path from "path";
-import { ConfigType } from "./ConfigType"; 
+import { ConfigType } from "../../lib/ConfigType"; 
 
 // ==================== HELPER FUNCTIONS ====================
 const delay = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
