@@ -73,7 +73,7 @@ class GCloudAutomation {
             ]
           : []),
       ],
-    };
+    }; 
 
     console.log(
       ` Launching browser in ${headless ? "HEADLESS" : "VISIBLE"} mode...`,
@@ -82,13 +82,16 @@ class GCloudAutomation {
     return this.browser;
   }
 
-  async createPage() {
+  async createPage(manual = false) {
     if (!this.browser) {
       throw new Error("Browser not initialized");
     }
 
+    const w = manual?640:1920;
+    const h = manual?480:1080;
+
     const page = await this.browser.newPage();
-    await page.setViewport({ width: 1920, height: 1080 });
+    await page.setViewport({ width: w, height: h }); //({ width: 1920, height: 1080 });
     await page.setUserAgent({
       userAgent:"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
   });
@@ -145,7 +148,8 @@ class GCloudAutomation {
   }
 
   await this.createBrowser(false);
-  const page = await this.createPage();
+  const page = await this.createPage(true);
+  
 
   console.log("\n Login Instructions:");
   console.log("1. Log in with your Google account");

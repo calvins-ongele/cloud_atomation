@@ -42,7 +42,8 @@ async initiate(req:Request) {
       profileDir,
       logDir: path.join(profileDir, 'logs'),
       timeout: Number(form.timeout ?? 30000),
-      debug:debug,
+      debug:debug, 
+      viewport:{ width: 640, height: 480 },
    }
    
   const automation: CloudAutomation = new CloudAutomation(config);

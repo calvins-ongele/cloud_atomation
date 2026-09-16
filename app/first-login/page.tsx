@@ -12,7 +12,7 @@ export default function FirstLoginPage() {
 
   async function submitForm() {
     try {
-      const response = await fetch("/api/automate", {
+      const response = await fetch("/api/automate", {   
         method: "POST",
         headers: {
           "Content-Type": "application/json",

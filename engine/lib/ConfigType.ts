@@ -4,5 +4,6 @@ export type ConfigType = {
     profileDir: string;
     timeout: number;
     debug: boolean;
-    logDir:string;
+    logDir:string; 
+    viewport?: { width: number; height: number };
 }
