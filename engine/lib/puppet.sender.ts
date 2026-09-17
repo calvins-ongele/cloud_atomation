@@ -53,7 +53,7 @@ class GCloudAutomation {
      * If debug mode is off, we can use the headless parameter to determine whether to run in headless mode or not.
      */
     const launchConfig = {
-      headless: !this.config.debug, //headless, // test mode first...//headless ? true : false,
+      headless: headless, //!this.config.debug, //headless, // test mode first...//headless ? true : false,
       userDataDir: this.profileDir,
       args: [
         "--no-sandbox",
@@ -107,8 +107,8 @@ class GCloudAutomation {
       console.log(" Checking session...");
 
       await page.goto("https://console.cloud.google.com", {
-        waitUntil: "networkidle2",
-        timeout: 30000,
+        waitUntil: "domcontentloaded",// "networkidle2",
+        timeout: 60000,
       });
 
       const isLoggedIn = await page.evaluate(() => {
@@ -160,8 +160,8 @@ class GCloudAutomation {
   // Navigate directly to the audience page so we know exactly where to expect
   const targetUrl = `https://console.cloud.google.com/auth/audience?project=${this.config.projectId}`;
   await page.goto(targetUrl, {
-    waitUntil: "networkidle2",
-    timeout: 60000,
+    waitUntil: "domcontentloaded",// "networkidle2",
+    timeout: 120000,
   });
 
   console.log(" Waiting for login...");
@@ -287,8 +287,8 @@ class GCloudAutomation {
 
     try {
       await page.goto(url, {
-        waitUntil: "networkidle2",
-        timeout: 30000,
+        waitUntil: "domcontentloaded",// "networkidle2",
+        timeout: 60000,
       });
     } catch (error) {
       console.log(
