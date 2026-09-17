@@ -7,7 +7,7 @@ export default function FirstLoginPage() {
     chromium_profile: "",
     endpoint: "",
     timeout: 30000,
-    debug: false,
+    debug: true,
   });
 
   async function submitForm() {

@@ -109,8 +109,18 @@ class GCloudAutomation {
 
       await page.goto(url, {
         waitUntil: "domcontentloaded",// "networkidle2",
-        timeout: 60000,
+        timeout: 30000,
       });
+
+       try {
+      await page.waitForSelector(
+        '[aria-label*="Google Account"], [data-ogac], [data-test-id="header"]',
+        { timeout: 15000 }
+      );
+    } catch {
+      // selector not found — maybe logged out
+      console.log("No account/header element found");
+    }
 
       const isLoggedIn = await page.evaluate(() => {
         const isNotLoginPage = !window.location.href.includes(
@@ -162,55 +172,39 @@ class GCloudAutomation {
   const targetUrl = `https://console.cloud.google.com/auth/audience?project=${this.config.projectId}`;
   await page.goto(targetUrl, {
     waitUntil: "domcontentloaded",// "networkidle2",
-    timeout: 120000,
+    timeout: 60000,
   });
 
   console.log(" Waiting for login...");
 
-  try {
-    // Wait for URL to be on the actual audience page (not signin, not redirect chain)
-    await page.waitForFunction(
-      (projectId) => {
-        const url = window.location.href;
-        
-        // Must NOT be on any google auth page
-        if (url.includes("accounts.google.com")) return false;
-        if (url.includes("ServiceLogin")) return false;
-        if (url.includes("flowName=GlifWebSignIn")) return false;
-        
-        // Must be on console.cloud.google.com
-        if (!url.includes("console.cloud.google.com")) return false;
-        
-        // The path must actually contain /auth/audience (not just in query string)
-        try {
-          const u = new URL(url);
-          if (!u.pathname.includes("/auth/audience")) return false;
-        } catch (e) {
-          return false;
-        }
-        
-        // Must have real signed-in indicators - account avatar with content
-        const accountBtn = document.querySelector('[aria-label*="Google Account"]');
-        if (!accountBtn) return false;
-        
-        // Check that the avatar actually contains an image or initial (proves logged in)
-        const avatarImg = accountBtn.querySelector('img');
-        if (avatarImg && avatarImg.src && avatarImg.src.length > 0) return true;
-        
-        // Or look for the project selector which only appears when logged in
-        const projectSelector = document.querySelector('[aria-label*="project" i]');
-        if (projectSelector) return true;
-        
-        return false;
-      },
-      { timeout: 300000, polling: 2000 },
-      this.config.projectId
-    );
-  } catch (error:any) {
-    console.error(" Login timeout");
-    await page.screenshot({ path: `${this.logDir}/login-timeout.png`, fullPage: true });
-    throw error;
+try {
+  while (true) {
+    const state = await page.evaluate(() => ({
+      url: window.location.href,
+      hasAccountBtn: !!document.querySelector('[aria-label*="Google Account"]'),
+      hasAvatarImg: !!document.querySelector('[aria-label*="Google Account"] img'),
+      hasProjectSelector: !!document.querySelector('[aria-label*="project" i]'),
+      bodySnippet: document.body.innerText.substring(0, 150),
+    }));
+    console.log("Login check state:", state);
+
+    // Simplified: just check we're on the audience page and NOT on signin
+    if (
+      state.url.includes("console.cloud.google.com") &&
+      !state.url.includes("accounts.google.com") &&
+      state.url.includes("/auth/audience")
+    ) {
+      console.log(" ✅ Login detected");
+      break;
+    }
+
+    await delay(2000);
   }
+} catch (error:any) {
+  console.error(" Login timeout");
+  await page.screenshot({ path: `${this.logDir}/login-timeout.png`, fullPage: true });
+  throw error;
+}
 
   console.log(" Login successful! Saving session...");
 
@@ -289,7 +283,7 @@ class GCloudAutomation {
     try {
       await page.goto(url, {
         waitUntil: "domcontentloaded",// "networkidle2",
-        timeout: 60000,
+        timeout: 30000,
       });
     } catch (error) {
       console.log(
