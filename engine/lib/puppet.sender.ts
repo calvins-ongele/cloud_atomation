@@ -53,7 +53,7 @@ class GCloudAutomation {
      * If debug mode is off, we can use the headless parameter to determine whether to run in headless mode or not.
      */
     const launchConfig = {
-      headless: headless, // test mode first...//headless ? true : false,
+      headless: !this.config.debug, //headless, // test mode first...//headless ? true : false,
       userDataDir: this.profileDir,
       args: [
         "--no-sandbox",
