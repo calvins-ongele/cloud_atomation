@@ -105,8 +105,9 @@ class GCloudAutomation {
   async checkSessionValid(page:puppeteer.Page) {
     try {
       console.log(" Checking session...");
+      const url = "https://console.cloud.google.com";
 
-      await page.goto("https://console.cloud.google.com", {
+      await page.goto(url, {
         waitUntil: "domcontentloaded",// "networkidle2",
         timeout: 60000,
       });
