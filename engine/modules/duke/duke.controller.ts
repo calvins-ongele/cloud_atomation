@@ -22,7 +22,7 @@ async initiate(req:Request) {
    const form = await req.json();
    const emails = form.emails.split(",").map((email:string) => email.trim()).filter((email:string) => email.length > 0);
    try {
-   const chromium_profile = form.chromium_profile.replace(' ', '-').toLowerCase() || 'duke_profile';
+   const chromium_profile = form.chromium_profile.replaceAll(' ', '-').toLowerCase() || 'duke_profile';
    const profileDir = path.join(process.cwd(), 'engine', 'modules', 'duke', chromium_profile);
    //console.log(`\n Using chromium profile directory: ${profileDir}`);return;
    // send tail end feedback via form
