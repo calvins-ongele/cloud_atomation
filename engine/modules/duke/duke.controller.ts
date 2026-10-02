@@ -19,9 +19,9 @@ async initiate(req:Request) {
     * debug: boolean // optional
     * }
     */
-   try {
    const form = await req.json();
    const emails = form.emails.split(",").map((email:string) => email.trim()).filter((email:string) => email.length > 0);
+   try {
    const chromium_profile = form.chromium_profile.replace(' ', '-').toLowerCase() || 'duke_profile';
    const profileDir = path.join(process.cwd(), 'engine', 'modules', 'duke', chromium_profile);
    //console.log(`\n Using chromium profile directory: ${profileDir}`);return;
@@ -67,11 +67,21 @@ async initiate(req:Request) {
       });
 
   } catch(cbError:any) {
+     fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ failedEmails:emails }),
+      });
+     
       console.error('\n Process failed:', cbError.message);
       return fail(new Error( `Duke automation failed: ${cbError.message}`));
   }
 
 } catch (error:any) {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ failedEmails:emails }),
+      });
    console.error('\n Error initiating Duke automation:', error.message);
    return fail(new Error(`Error initiating your automation: ${error.message}`));
 }
