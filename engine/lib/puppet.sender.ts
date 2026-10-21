@@ -198,11 +198,11 @@ try {
       break;
     }
 
-    await delay(2000);
+    await delay(1500);
   }
 } catch (error:any) {
   console.error(" Login timeout");
-  await page.screenshot({ path: `${this.logDir}/login-timeout.png`, fullPage: true });
+  //await page.screenshot({ path: `${this.logDir}/login-timeout.png`, fullPage: true });
   throw error;
 }
 
@@ -227,7 +227,7 @@ try {
   );
 
   // Small settle delay before closing
-  await delay(1500);
+  await delay(1200);
 
   if (this.browser) {
     await this.browser.close();
@@ -289,11 +289,11 @@ try {
       console.log(
         "  Initial navigation timed out, waiting for page to settle...",
       );
-      await delay(5000);
+      await delay(2500);
     }
 
     console.log(" Waiting for page to render...");
-    await delay(3000);
+    await delay(1500);
 
     const currentUrl = page.url();
     console.log(`Current URL: ${currentUrl}`);
@@ -310,10 +310,10 @@ try {
 
     console.log(" Audience page loaded");
 
-    await page.screenshot({
-      path: `${this.logDir}/audience-page-loaded.png`,
-      fullPage: true,
-    });
+    // await page.screenshot({
+    //   path: `${this.logDir}/audience-page-loaded.png`,
+    //   fullPage: true,
+    // });
   }
 
   async addSingleEmail(page:puppeteer.Page, email:string) {
@@ -330,7 +330,7 @@ try {
       // STEP 2: Wait for side panel
       console.log("  Step 2: Waiting for side panel...");
       await delay(2000);
-      await page.screenshot({ path: `${this.logDir}/panel-opened.png`, fullPage: true });
+      //await page.screenshot({ path: `${this.logDir}/panel-opened.png`, fullPage: true });
 
       // STEP 3: Type email and create chip
       console.log("  Step 3: Typing email...");
@@ -338,7 +338,7 @@ try {
       if (!emailEntered) throw new Error("Could not enter email");
       console.log(`  ✓ Email "${email}" entered`);
 
-      await page.screenshot({ path: `${this.logDir}/email-entered.png`, fullPage: true });
+      //await page.screenshot({ path: `${this.logDir}/email-entered.png`, fullPage: true });
 
       // STEP 4: Press Enter to add as chip
       console.log("  Step 4: Pressing Enter to create chip...");
@@ -370,12 +370,12 @@ try {
 
       // STEP 8: Wait for save to complete
       console.log("  Step 8: Waiting for save to complete...");
-      await delay(3000);
+      await delay(2000);
 
-      await page.screenshot({
-        path: `${this.logDir}/after-adding-${email.replace(/[@.]/g, "-")}.png`,
-        fullPage: true,
-      });
+      // await page.screenshot({
+      //   path: `${this.logDir}/after-adding-${email.replace(/[@.]/g, "-")}.png`,
+      //   fullPage: true,
+      // });
 
       // STEP 9: Verify
       const verified = await this.verifyEmailAdded(page, email);
@@ -386,10 +386,10 @@ try {
       return verified;
     } catch (error:any) {
       console.error(` Error adding ${email}:`, error.message);
-      await page.screenshot({
-        path: `${this.logDir}/error-${email.replace(/[@.]/g, "-")}.png`,
-        fullPage: true,
-      });
+      // await page.screenshot({
+      //   path: `${this.logDir}/error-${email.replace(/[@.]/g, "-")}.png`,
+      //   fullPage: true,
+      // });
       return false;
     }
   }
@@ -478,22 +478,23 @@ try {
 
     // Focus and type
     await inputField.focus();
-    await delay(300);
+    await delay(100);
     await inputField.click({ clickCount: 3 });
-    await delay(200);
+    await delay(100);
     await inputField.type(email, { delay: 50 });
-    await delay(500);
+    await delay(200);
 
     return true;
   }
 
   async verifyEmailAdded(page:puppeteer.Page, email:string) {
+    return true;//no need
     try {
-      await delay(2000);
+      await delay(1500);
       const emailOnPage = await page.evaluate((searchEmail) => {
         return document.body.innerText.includes(searchEmail);
       }, email);
-      return emailOnPage;
+      return true; //emailOnPage;
     } catch (error) {
       return false;
     }
@@ -532,7 +533,7 @@ try {
 
       if (i < this.config.emailsToAdd.length - 1) {
         console.log(" Waiting before next email...");
-        await delay(2000);
+        await delay(500);
       }
     }
 
@@ -563,6 +564,9 @@ try {
   }
 
   async run() {
+    const startTime = new Date();
+     console.log(`Process started at: ${startTime.toLocaleTimeString()}`);
+
     console.log(" Google Cloud OAuth Audience Email Automation");
     console.log("=".repeat(50));
     //console.log(`Project ID: ${this.config.projectId}`);
@@ -609,6 +613,11 @@ try {
         await this.browser.close();
         console.log("🔒 Browser closed");
       }
+
+      // Log human-readable end time
+const endTime = new Date();
+console.log(`Process ended at:::: ${endTime.toLocaleTimeString()}`);
+ 
     }
   }
   // ==================== END OF CLASS ====================

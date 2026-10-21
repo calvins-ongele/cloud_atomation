@@ -5,5 +5,6 @@ export type ConfigType = {
     timeout: number;
     debug: boolean;
     logDir:string; 
+    bookingUrl?:string;
     viewport?: { width: number; height: number };
 }
