@@ -197,6 +197,7 @@ class BookingAutomation {
     
 
     //example email ------- 5876905289-gapd.uvje.cyva.pupb@property.booking.com
+    //email 2-------------- kelly.michal.business@gmail.com
 
     //////save results
     // Objects to hold your results in Node.js
