@@ -58,6 +58,7 @@ async initiate(req:Request) {
   try {
       let result;
       let succuesses;
+
       if (isBooking.length > 0) {
          result = await automation.run();
          succuesses = result.successful ?? []
@@ -74,7 +75,7 @@ async initiate(req:Request) {
       fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ successfulEmails }),
+        body: JSON.stringify({ successfulEmails, isBooking }),
       });
 
       return ok({
